@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--<shape xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    android:shape="oval" >-->
+<!--    <gradient-->
+<!--        android:startColor="#FFFF0000"-->
+<!--        android:endColor="#80FF00FF"-->
+<!--        android:angle="270" />-->
+<!--    <stroke-->
+<!--        android:width="2dp"-->
+<!--        android:color="@color/colorPrimary"-->
+<!--    />-->
+<!--</shape>-->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/colorPrimaryDark">
+    <item android:id="@android:id/mask">
+        <shape android:shape="oval">
+            <solid android:color="@color/colorPrimaryDark" />
+        </shape>
+    </item>
+
+    <item android:id="@android:id/background">
+        <shape android:shape="oval">
+            <gradient
+                android:angle="90"
+                android:endColor="#80FF00FF"
+                android:startColor="#FFFF0000"
+                android:type="linear" />
+            <stroke
+                android:width="2dp"
+                android:color="@color/colorPrimary"/>
+        </shape>
+    </item>
+</ripple>
