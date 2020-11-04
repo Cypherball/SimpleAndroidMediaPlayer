@@ -4,18 +4,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.media.MediaPlayer;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.SeekBar;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.nitishweb.app12.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+
+import static java.lang.Thread.sleep;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initViews() {
+        binding.seekBar.setEnabled(false);
+
         musicList = new ArrayList<>();
         musicMap = new LinkedHashMap<>();
 
@@ -56,6 +58,10 @@ public class MainActivity extends AppCompatActivity {
                 binding.nowPlayingTV.setText(nowPlaying.name);
                 if (player != null) player.stop();
                 player = MediaPlayer.create(this, nowPlaying.resourceId);
+                binding.seekBar.setProgress(0);
+                binding.seekBar.setMax(player.getDuration() / 1000);
+                binding.seekBar.setEnabled(true);
+                Log.d(TAG, "setListeners: Duration: " + player.getDuration() + "ms");
             } else {
                 binding.nowPlayingIV.setImageDrawable(null);
                 binding.nowPlayingTV.setText("");
@@ -68,7 +74,10 @@ public class MainActivity extends AppCompatActivity {
                 Snackbar.make(binding.getRoot(), "No Music Selected!", Snackbar.LENGTH_SHORT).show();
                 return;
             }
-            player.start();
+            if (!player.isPlaying()) {
+                player.start();
+                activateSeekBar();
+            }
             Snackbar.make(binding.getRoot(), "Now Playing: " + nowPlaying.name, Snackbar.LENGTH_SHORT).show();
         });
 
@@ -79,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
             }
             player.stop();
             player = MediaPlayer.create(this, nowPlaying.resourceId);
+            binding.seekBar.setProgress(0);
             Snackbar.make(binding.getRoot(), "Music Stopped", Snackbar.LENGTH_SHORT).show();
         });
 
@@ -92,6 +102,41 @@ public class MainActivity extends AppCompatActivity {
                 Snackbar.make(binding.getRoot(), "Music Paused", Snackbar.LENGTH_SHORT).show();
             }
         });
+
+        binding.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (player != null && fromUser) {
+                    player.seekTo(progress * 1000);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+    }
+
+    private void activateSeekBar() {
+        Runnable mRunnable = () -> {
+            while (player!=null && player.isPlaying()) {
+                Log.d(TAG, "setListeners: Position: " + player.getCurrentPosition() / 1000);
+                binding.seekBar.setProgress(player.getCurrentPosition() / 1000);
+                try {
+                    sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        Thread thread = new Thread(mRunnable);
+        thread.start();
     }
 
     private void populateMusicList() {

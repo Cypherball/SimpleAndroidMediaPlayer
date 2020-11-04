@@ -71,15 +71,15 @@
         android:layout_width="250dp"
         android:layout_height="250dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
+        android:contentDescription="Now Playing Art"
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
-        tools:srcCompat="@drawable/cant_take_my_eyes_off_you"
-        android:contentDescription="Now Playing Art" />
+        tools:srcCompat="@drawable/cant_take_my_eyes_off_you" />
 
     <TextView
         android:id="@+id/nowPlayingTV"
@@ -100,15 +100,15 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="8dp"
         android:background="@drawable/round_btn"
+        android:contentDescription="Play"
         android:elevation="4dp"
         app:layout_constraintEnd_toStartOf="@+id/ib_stop"
         app:layout_constraintStart_toEndOf="@+id/ib_pause"
-        app:layout_constraintTop_toBottomOf="@+id/nowPlayingTV"
-        app:srcCompat="@drawable/ic_play"
-        android:contentDescription="Play" />
+        app:layout_constraintTop_toBottomOf="@+id/seekBar"
+        app:srcCompat="@drawable/ic_play" />
 
     <ImageButton
         android:id="@+id/ib_stop"
@@ -138,5 +138,16 @@
         app:layout_constraintTop_toTopOf="@+id/ib_play"
         app:srcCompat="@drawable/ic_pause"
         android:contentDescription="Pause" />
+
+    <SeekBar
+        android:id="@+id/seekBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nowPlayingTV" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
