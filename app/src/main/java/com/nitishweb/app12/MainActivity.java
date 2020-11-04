@@ -14,15 +14,16 @@ import com.nitishweb.app12.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 
 import static java.lang.Thread.sleep;
 
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
-    private ArrayList<String> musicList;
-    private LinkedHashMap<String, Music> musicMap;
-    private Music nowPlaying;
+    private ArrayList<String> musicList;    //List holds music values for AutoComplete TextView
+    private LinkedHashMap<String, Music> musicMap;  //Holds list of Music objects with it's name as key
+    private Music nowPlaying;   //Current selected music object
     private MediaPlayer player;
     private final String TAG = "MainActivity";
 
@@ -36,13 +37,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initViews() {
+        binding.seekBar.setProgress(0);
         binding.seekBar.setEnabled(false);
 
         musicList = new ArrayList<>();
         musicMap = new LinkedHashMap<>();
 
-        populateMusicList();
+        populateMusicList();    //Generate list of predefined music from assets
 
+        //Set Adapter for AutoComplete TextView
         ArrayAdapter<String> musicACTVAdapter = new ArrayAdapter<>(this, R.layout.simple_list_item, R.id.list_item, musicList);
         binding.musicACTV.setAdapter(musicACTVAdapter);
 
@@ -54,15 +57,24 @@ public class MainActivity extends AppCompatActivity {
             nowPlaying = musicMap.get(musicList.get(position));
             Log.d(TAG, "onItemSelected: " + position);
             if (nowPlaying!=null) {
+                //Set Image and Text of Music object
                 binding.nowPlayingIV.setImageDrawable(ContextCompat.getDrawable(this, nowPlaying.imageId));
                 binding.nowPlayingTV.setText(nowPlaying.name);
+                //Create MediaPlayer instance
                 if (player != null) player.stop();
                 player = MediaPlayer.create(this, nowPlaying.resourceId);
+                //Reset SeekBar according to Music
                 binding.seekBar.setProgress(0);
                 binding.seekBar.setMax(player.getDuration() / 1000);
                 binding.seekBar.setEnabled(true);
-                Log.d(TAG, "setListeners: Duration: " + player.getDuration() + "ms");
+                //Update Duration Text View
+                int duration = player.getDuration() / 1000;
+                int minutes = (duration % 3600) / 60;
+                int seconds = duration % 60;
+                String durationTxt = String.format(Locale.ENGLISH,"%d:%02d",minutes,seconds);
+                binding.durationTV.setText(durationTxt);
             } else {
+                //Clear everything in case any unexpected condition occurs
                 binding.nowPlayingIV.setImageDrawable(null);
                 binding.nowPlayingTV.setText("");
                 Snackbar.make(binding.getRoot(), "Error! Music Not Found.", Snackbar.LENGTH_SHORT).show();
@@ -74,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
                 Snackbar.make(binding.getRoot(), "No Music Selected!", Snackbar.LENGTH_SHORT).show();
                 return;
             }
+            //Play music if not currently playing
             if (!player.isPlaying()) {
                 player.start();
                 activateSeekBar();
@@ -86,9 +99,10 @@ public class MainActivity extends AppCompatActivity {
                 Snackbar.make(binding.getRoot(), "No Music Selected!", Snackbar.LENGTH_SHORT).show();
                 return;
             }
+            //Stop playing and recreate media player instance
             player.stop();
             player = MediaPlayer.create(this, nowPlaying.resourceId);
-            binding.seekBar.setProgress(0);
+            binding.seekBar.setProgress(0); //Reset SeekBar
             Snackbar.make(binding.getRoot(), "Music Stopped", Snackbar.LENGTH_SHORT).show();
         });
 
@@ -106,9 +120,15 @@ public class MainActivity extends AppCompatActivity {
         binding.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                //Seeks the player position to specified progress value if it is user input
                 if (player != null && fromUser) {
                     player.seekTo(progress * 1000);
                 }
+                //Update Progress Text View
+                int minutes = (progress % 3600) / 60;
+                int seconds = progress % 60;
+                String progressTxt = String.format(Locale.ENGLISH,"%d:%02d",minutes,seconds);
+                binding.progressTV.setText(progressTxt);
             }
 
             @Override
@@ -123,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    //Updates seekbar every second
     private void activateSeekBar() {
         Runnable mRunnable = () -> {
             while (player!=null && player.isPlaying()) {
@@ -135,6 +156,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
+        //Execute SeekBar Update on separate thread
         Thread thread = new Thread(mRunnable);
         thread.start();
     }
