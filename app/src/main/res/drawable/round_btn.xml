@@ -16,7 +16,7 @@
                 android:type="linear" />
             <stroke
                 android:width="2dp"
-                android:color="@color/colorPrimary"/>
+                android:color="@color/colorPrimary" />
         </shape>
     </item>
 </ripple>

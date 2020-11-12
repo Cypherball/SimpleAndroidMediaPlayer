@@ -28,14 +28,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2">
+        app:layout_constraintTop_toBottomOf="@+id/selectTitleTV">
 
         <AutoCompleteTextView
-            android:id="@+id/musicACTV"
+            android:id="@+id/selectACTV"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="none"
@@ -43,18 +43,17 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/selectTitleTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
         android:text="Select Music"
         android:textColor="#FFF"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleTV" />
+        app:layout_constraintTop_toBottomOf="@+id/playerRadioGroup" />
 
     <TextView
         android:id="@+id/textView3"
@@ -70,6 +69,7 @@
 
     <ImageView
         android:id="@+id/nowPlayingIV"
+
         android:layout_width="250dp"
         android:layout_height="250dp"
         android:layout_marginStart="16dp"
@@ -122,29 +122,29 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginEnd="64dp"
-        android:elevation="4dp"
         android:background="@drawable/round_btn"
+        android:contentDescription="Stop"
+        android:elevation="4dp"
         app:layout_constraintBottom_toBottomOf="@+id/ib_play"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/ib_play"
         app:layout_constraintTop_toTopOf="@+id/ib_play"
-        app:srcCompat="@drawable/ic_stop"
-        android:contentDescription="Stop" />
+        app:srcCompat="@drawable/ic_stop" />
 
     <ImageButton
         android:id="@+id/ib_pause"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginStart="64dp"
-        android:elevation="4dp"
         android:background="@drawable/round_btn"
+        android:contentDescription="Pause"
+        android:elevation="4dp"
         app:layout_constraintBottom_toBottomOf="@+id/ib_play"
         app:layout_constraintEnd_toStartOf="@+id/ib_play"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/ib_play"
-        app:srcCompat="@drawable/ic_pause"
-        android:contentDescription="Pause" />
+        app:srcCompat="@drawable/ic_pause" />
 
     <SeekBar
         android:id="@+id/seekBar"
@@ -162,10 +162,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
-        tools:text="3:52"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/seekBar" />
+        app:layout_constraintTop_toBottomOf="@+id/seekBar"
+        tools:text="3:52" />
 
     <TextView
         android:id="@+id/progressTV"
@@ -176,5 +176,52 @@
         android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/seekBar" />
+
+    <FrameLayout
+        android:layout_width="300dp"
+        android:layout_height="180dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/textView3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout">
+
+        <VideoView
+            android:id="@+id/videoView"
+            android:layout_width="320dp"
+            android:layout_height="180dp"
+            android:elevation="4dp"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <RadioGroup
+        android:id="@+id/playerRadioGroup"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleTV">
+
+        <RadioButton
+            android:id="@+id/musicRadio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Music" />
+
+        <RadioButton
+            android:id="@+id/videoRadio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:text="Video" />
+    </RadioGroup>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
